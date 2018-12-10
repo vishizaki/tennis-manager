@@ -1,0 +1,8 @@
+Players available for matches:
+
+  <% @students.each do |student| %>
+    <div class="btn" data-toggle="modal" data-target="#myModal-<%= student.id %>">
+      <%= student.first_name %>
+    </div>
+      <%= render partial: 'players_modal', locals: { student: student } %>
+  <% end %>

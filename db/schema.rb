@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_04_230714) do
+ActiveRecord::Schema.define(version: 2018_12_10_204753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,14 +28,16 @@ ActiveRecord::Schema.define(version: 2018_12_04_230714) do
     t.string "title"
     t.text "description"
     t.string "group"
-    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_feedbacks_on_user_id"
+    t.integer "coach_id"
+    t.integer "student_id"
+    t.index ["coach_id"], name: "index_feedbacks_on_coach_id"
+    t.index ["student_id"], name: "index_feedbacks_on_student_id"
   end
 
   create_table "lessons", force: :cascade do |t|
-    t.date "date"
+    t.datetime "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "student_id"
@@ -46,12 +48,15 @@ ActiveRecord::Schema.define(version: 2018_12_04_230714) do
 
   create_table "matches", force: :cascade do |t|
     t.bigint "court_id"
-    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.date "date"
+    t.datetime "date"
+    t.string "status", default: "pending"
+    t.integer "current_player_id"
+    t.integer "opponent_id"
     t.index ["court_id"], name: "index_matches_on_court_id"
-    t.index ["user_id"], name: "index_matches_on_user_id"
+    t.index ["current_player_id"], name: "index_matches_on_current_player_id"
+    t.index ["opponent_id"], name: "index_matches_on_opponent_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -70,7 +75,5 @@ ActiveRecord::Schema.define(version: 2018_12_04_230714) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "feedbacks", "users"
   add_foreign_key "matches", "courts"
-  add_foreign_key "matches", "users"
 end
